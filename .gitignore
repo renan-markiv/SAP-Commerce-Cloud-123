@@ -3,3 +3,7 @@
 /bin/
 !/bin/custom
 /roles
+data/hsqldb/mydb.log
+data/hsqldb/mydb.data
+
+
