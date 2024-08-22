@@ -12616,5 +12616,213 @@
 			</wz:step>
 		</wz:flow>
     </context>
+    <context type="com.hybris.backoffice.workflow.designer.form.WorkflowTemplateCreateActionForm" component="workflow-designer-create-wizard">
+        <wz:flow xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config" xmlns:df="http://www.hybris.com/cockpitng/component/dynamicForms" xmlns:na="http://www.hybris.com/cockpitng/config/notifications" id="WorkflowActionTemplateWizard" title="workflowactiontemplate.createwizard.title">
+            <wz:prepare id="itemPrepare">
+                <wz:initialize property="newObject" type="ctx.TYPE_CODE"/>
+                <wz:assign property="newObject.workflow" value="ctx.parentObject"/>
+                <wz:assign property="newObject.code" value="ctx.edit ? ctx.parentObject.code : null"/>
+                <wz:assign property="newObject.name" value="ctx.edit ? ctx.parentObject.name : null"/>
+                <wz:assign property="newObject.description" value="ctx.edit ? ctx.parentObject.description : null"/>
+                <wz:assign property="newObject.principalAssigned" value="ctx.parentObject.principalAssigned"/>
+                <wz:assign property="newObject.actionType" value="ctx.parentObject.actionType"/>
+			</wz:prepare>
+            <wz:step id="step1" label="flow.allmanadatory">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newObject">
+                        <wz:property label="workflowdesigner.createwizard.action.code" qualifier="code" type="java.lang.String"/>
+                        <wz:property editor="com.hybris.cockpitng.editor.defaultreferenceeditor" label="workflowdesigner.createwizard.action.assignedUser" qualifier="principalAssigned" type="Reference(Principal)">
+                            <wz:editor-parameter>
+<wz:name>availableValuesProvider</wz:name>
+<wz:value>workflowAssigneeReferenceSearchFacade</wz:value>
+							</wz:editor-parameter>
+						</wz:property>
+                        <wz:property editor="com.hybris.cockpitng.editor.defaultenum" label="workflowdesigner.createwizard.action.type" qualifier="actionType" type="java.lang.Enum(de.hybris.platform.workflow.enums.WorkflowActionType)"/>
+					</wz:property-list>
+				</wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:cancel/>
+                    <wz:next/>
+                    <wz:custom handler="workflowDesignerCreateActionHandler" label="com.hybris.cockpitng.widgets.configurableflow.flow.done" visible="newObject.code != null and newObject.principalAssigned != null and newObject.actionType != null"/>
+				</wz:navigation>
+			</wz:step>
+            <wz:step id="step2" label="flow.nomandatoryfields">
+                <wz:content id="step2.content">
+                    <wz:property-list root="newObject">
+                        <wz:property label="workflowdesigner.createwizard.action.name" qualifier="name" type="Localized(java.lang.String)"/>
+                        <wz:property label="workflowdesigner.createwizard.action.description" qualifier="description" type="Localized(java.lang.String)"/>
+					</wz:property-list>
+				</wz:content>
+                <wz:navigation id="step2.navigation">
+                    <wz:cancel/>
+                    <wz:back/>
+                    <wz:custom handler="workflowDesignerCreateActionHandler" label="com.hybris.cockpitng.widgets.configurableflow.flow.done" visible="newObject.code != null and newObject.principalAssigned != null and newObject.actionType != null"/>
+				</wz:navigation>
+			</wz:step>
+		</wz:flow>
+    </context>
+    <context type="com.hybris.backoffice.workflow.designer.form.WorkflowTemplateCreateDecisionForm" component="workflow-designer-create-wizard">
+        <wz:flow xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config" xmlns:df="http://www.hybris.com/cockpitng/component/dynamicForms" xmlns:na="http://www.hybris.com/cockpitng/config/notifications" id="WorkflowDecisionTemplateWizard" title="workflowdecisiontemplate.createwizard.title">
+            <wz:prepare id="itemPrepare">
+                <wz:initialize property="newObject" type="ctx.TYPE_CODE"/>
+                <wz:assign property="newObject.workflow" value="ctx.parentObject"/>
+                <wz:assign property="newObject.code" value="ctx.edit ? ctx.parentObject.code : null"/>
+                <wz:assign property="newObject.name" value="ctx.edit ? ctx.parentObject.name : null"/>
+			</wz:prepare>
+            <wz:step id="step1" label="flow.allmanadatory">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newObject">
+                        <wz:property label="workflowdesigner.createwizard.decision.code" qualifier="code" type="java.lang.String"/>
+                        <wz:property label="workflowdesigner.createwizard.decision.name" qualifier="name" type="Localized(java.lang.String)"/>
+					</wz:property-list>
+				</wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:cancel/>
+                    <wz:custom handler="workflowDesignerCreateDecisionHandler" label="com.hybris.cockpitng.widgets.configurableflow.flow.done" visible="newObject.code != null"/>
+				</wz:navigation>
+			</wz:step>
+		</wz:flow>
+    </context>
+    <context merge-by="source" component="notification-area" source="workflowDesigner">
+        <na:notification-area xmlns:na="http://www.hybris.com/cockpitng/config/notifications" xmlns:df="http://www.hybris.com/cockpitng/component/dynamicForms" xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config">
+            <na:notifications destination="TOPMOST" eventType="wrongConnection" level="WARNING">
+                <na:message>workflowdesigner.notification.wrongConnection.warning</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="alreadyConnected" level="WARNING">
+                <na:message>workflowdesigner.notification.alreadyConnected.warning</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="nonUniqueActionCode" level="FAILURE">
+                <na:message>workflowdesigner.notification.nonUniqueActionCode.error</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="nonUniqueDecisionCode" level="FAILURE">
+                <na:message>workflowdesigner.notification.nonUniqueDecisionCode.error</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="saveSuccess" level="SUCCESS">
+                <na:message>workflowdesigner.notification.save.success</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="cannotSave" level="FAILURE">
+                <na:message>workflowdesigner.notification.save.error</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="andNodeEdition" level="WARNING">
+                <na:message>workflowdesigner.notification.andNodeEdition.warning</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="alreadyConnectedViaAnd" level="WARNING">
+                <na:message>workflowdesigner.notification.alreadyConnectedViaAnd.warning</na:message>
+                <na:timeout>5000</na:timeout>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="nodesAlreadyConnectedDirectly" level="WARNING">
+                <na:message>workflowdesigner.notification.nodesAlreadyConnectedDirectly.warning</na:message>
+                <na:timeout>5000</na:timeout>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="multipleAndNodesPointingToSameTarget" level="WARNING">
+                <na:message>workflowdesigner.notification.multipleAndNodesPointingToSameTarget.warning</na:message>
+			</na:notifications>
+            <na:notifications destination="TOPMOST" eventType="decisionOneIncomingConnection" level="WARNING">
+                <na:message>workflowdesigner.notification.decisionOneIncomingConnection.warning</na:message>
+			</na:notifications>
+		</na:notification-area>
+    </context>
+    <context type="com.hybris.backoffice.workflow.designer.form.AbstractWorkflowTemplateCreateForm" component="configurableFlowDynamicForms">
+        <df:dynamicForms xmlns:df="http://www.hybris.com/cockpitng/component/dynamicForms" xmlns:na="http://www.hybris.com/cockpitng/config/notifications" xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config" modelProperty="newObject">
+            <df:attribute disabledIf="ctx.updateId" id="disableCode" modelProperty="*" qualifier="newObject.code" triggeredOn="ctx.updateId"/>
+		</df:dynamicForms>
+    </context>
+    <context merge-by="type" parent="com.hybris.backoffice.workflow.designer.form.AbstractWorkflowTemplateCreateForm" type="com.hybris.backoffice.workflow.designer.form.WorkflowTemplateCreateActionForm" component="configurableFlowDynamicForms">
+        <df:dynamicForms xmlns:df="http://www.hybris.com/cockpitng/component/dynamicForms" xmlns:na="http://www.hybris.com/cockpitng/config/notifications" xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config" modelProperty="newObject">
+            <df:attribute disabledIf="ctx.updateType" id="disableActionType" modelProperty="*" qualifier="newObject.actionType" triggeredOn="ctx.updateType"/>
+		</df:dynamicForms>
+    </context>
+    <context principal="advanced" component="available-locales">
+        <al:cockpit-locales xmlns:al="http://www.hybris.com/cockpitng/config/availableLocales" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+            <al:cockpit-locale enabled="true" locale="en-US" name="english"/>
+            <al:cockpit-locale enabled="true" locale="de-DE" name="german"/>
+		</al:cockpit-locales>
+    </context>
+    <context component="testeditors">
+        <y:editors xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <y:group qualifier="common">
+                <y:label>editorgroup.common</y:label>
+                <y:property qualifier="mytext" type="java.lang.String"/>
+                <y:property qualifier="myHashText" type="java.lang.Integer"/>
+    		</y:group>
+    	</y:editors>
+    </context>
+    <context component="testactions">
+        <y:actions xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <y:group qualifier="common">
+                <y:label>actiongroup.common</y:label>
+                <y:action action-id="com.hybris.cockpitng.action.example.helloworld" property="mytext"/>
+                <y:action action-id="com.hybris.cockpitng.action.example.helloworld" property="mytext"/>
+                <y:action action-id="com.hybris.cockpitng.action.example.helloworld" property="mytext"/>
+    		</y:group>
+    	</y:actions>
+    </context>
+    <context principal="advanced" component="explorer-tree">
+        <explorer-tree:explorer-tree xmlns:explorer-tree="http://www.hybris.com/cockpitng/config/explorertree" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+            <explorer-tree:navigation-node id="node1">
+                <explorer-tree:navigation-node id="node1_1">
+                    <explorer-tree:navigation-node id="node1_1_1"/>
+				</explorer-tree:navigation-node>
+                <explorer-tree:navigation-node id="node1_2">
+                    <explorer-tree:navigation-node id="node1_2_1"/>
+				</explorer-tree:navigation-node>
+			</explorer-tree:navigation-node>
+            <explorer-tree:navigation-node id="node2">
+                <explorer-tree:navigation-node id="node2_1"/>
+                <explorer-tree:navigation-node id="testnode"/>
+			</explorer-tree:navigation-node>
+		</explorer-tree:explorer-tree>
+    </context>
+    <context type="com.hybris.cockpitng.dataaccess.facades.permissions.impl.DefaultPermissionInfo" component="permissionManagementTypesCollectionBrowser">
+        <cb:collection-browser xmlns:cb="http://www.hybris.com/cockpitng/config/collectionbrowser" xmlns:lv="http://www.hybris.com/cockpitng/component/listView" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:yc="http://www.hybris.com/cockpitng/config/common">
+            <cb:available-molds>
+                <cb:mold spring-bean="listViewCollectionBrowserMoldStrategy"/>
+			</cb:available-molds>
+		</cb:collection-browser>
+    </context>
+    <context type="com.hybris.cockpitng.dataaccess.facades.permissions.impl.DefaultPermissionInfo" component="permissionManagementTypes">
+        <lv:list-view xmlns:lv="http://www.hybris.com/cockpitng/component/listView" xmlns:cb="http://www.hybris.com/cockpitng/config/collectionbrowser" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:yc="http://www.hybris.com/cockpitng/config/common">
+            <lv:column label="context" qualifier="label"/>
+            <lv:column label="read" qualifier="read" spring-bean="permissionManagementListCellRenderer" width="70px"/>
+            <lv:column label="change" qualifier="change" spring-bean="permissionManagementListCellRenderer" width="70px"/>
+            <lv:column label="create" qualifier="create" spring-bean="permissionManagementListCellRenderer" width="70px"/>
+            <lv:column label="remove" qualifier="remove" spring-bean="permissionManagementListCellRenderer" width="70px"/>
+		</lv:list-view>
+    </context>
+    <context type="com.hybris.cockpitng.dataaccess.facades.permissions.impl.DefaultPermissionInfo" component="permissionManagementFieldsCollectionBrowser">
+        <cb:collection-browser xmlns:cb="http://www.hybris.com/cockpitng/config/collectionbrowser" xmlns:lv="http://www.hybris.com/cockpitng/component/listView" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:yc="http://www.hybris.com/cockpitng/config/common">
+            <cb:available-molds>
+                <cb:mold spring-bean="listViewCollectionBrowserMoldStrategy"/>
+			</cb:available-molds>
+		</cb:collection-browser>
+    </context>
+    <context type="com.hybris.cockpitng.dataaccess.facades.permissions.impl.DefaultPermissionInfo" component="permissionManagementFields">
+        <list:list-view xmlns:list="http://www.hybris.com/cockpitng/component/listView" xmlns:cb="http://www.hybris.com/cockpitng/config/collectionbrowser" xmlns:lv="http://www.hybris.com/cockpitng/component/listView" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:yc="http://www.hybris.com/cockpitng/config/common">
+            <lv:column label="attribute" qualifier="label"/>
+            <lv:column label="read" qualifier="read" spring-bean="permissionManagementListCellRenderer" width="70px"/>
+            <lv:column label="change" qualifier="change" spring-bean="permissionManagementListCellRenderer" width="70px"/>
+		</list:list-view>
+    </context>
+    <context type="com.hybris.cockpitng.dataaccess.facades.permissions.impl.DefaultPermissionInfo" component="permissionManagementlistviewActions">
+        <y:actions xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:cb="http://www.hybris.com/cockpitng/config/collectionbrowser" xmlns:lv="http://www.hybris.com/cockpitng/component/listView" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:yc="http://www.hybris.com/cockpitng/config/common">
+            <y:group qualifier="common">
+                <y:action action-id="com.hybris.cockpitng.action.delete.permission" property="selectedObjects" triggerOnKeys="#del">
+                    <y:parameter>
+                        <yc:name>needsConfirmation</yc:name>
+                        <yc:value>true</yc:value>
+					</y:parameter>
+				</y:action>
+                <y:action action-id="com.hybris.cockpitng.action.create.permission" property="$_permissionInfoType"/>
+			</y:group>
+		</y:actions>
+    </context>
+    <context component="testBoolean">
+        <y:editors xmlns:y="http://www.hybris.com/cockpit/config/hybris" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <y:group qualifier="common">
+                <y:label>testBoolean</y:label>
+                <y:property qualifier="boolean" type="BOOLEAN(CHECKBOX)"/>
+			</y:group>
+    	</y:editors>
+    </context>
     <import resource="workflow-designer/config/backoffice-workflow-designer-config.xml"/>
 </config>
